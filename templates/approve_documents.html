@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Character encoding for correct text rendering -->
+    <meta charset="UTF-8" />
+
+    <!-- Page title displayed in browser tab -->
+    <title>Approve Documents</title>
+
+    <!-- Responsive viewport configuration -->
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- Bootstrap CSS for layout and UI components -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+
+    <!-- Bootstrap Icons for navigation and action icons -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+      rel="stylesheet"
+    />
+
+    <style>
+      /* Global background and base typography */
+      body {
+        background: linear-gradient(180deg, #f1f5f9 0%, #ffffff 100%);
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+          sans-serif;
+      }
+
+      /* Main admin card styling */
+      .admin-card {
+        border-radius: 26px;
+        background: #ffffff;
+      }
+
+      /* Header divider and spacing */
+      .admin-header {
+        border-bottom: 1px solid #e5e7eb;
+        padding-bottom: 1rem;
+        margin-bottom: 2rem;
+      }
+
+      /* Individual student row styling */
+      .student-row {
+        border-radius: 16px;
+        padding: 14px 20px;
+        border: 2px solid #6c757d;
+        margin-bottom: 16px;
+      }
+
+      /* Action button styling */
+      .action-btn {
+        font-size: 0.85rem;
+        padding: 6px 14px;
+        border-radius: 10px;
+      }
+
+      /* Clickable student name styling */
+      .student-name {
+        cursor: pointer;
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- ================= MAIN CONTAINER ================= -->
+    <!-- Centers the admin document review interface -->
+    <div
+      class="container min-vh-100 d-flex align-items-center justify-content-center"
+    >
+      <div
+        class="card shadow-lg border-0 admin-card w-100"
+        style="max-width: 1000px"
+      >
+        <div class="card-body p-4 p-md-5">
+          <!-- ================= HEADER ================= -->
+          <div
+            class="d-flex justify-content-between align-items-center admin-header"
+          >
+            <!-- Admin identification -->
+            <h4 class="fw-bold mb-0">{{ admin_name }}</h4>
+
+            <!-- Back navigation to admin dashboard -->
+            <a href="{{ url_for('admin_dashboard') }}" class="btn btn-sm">
+              <i class="bi bi-arrow-left"></i> Back
+            </a>
+          </div>
+
+          <!-- ================= STUDENT LIST ================= -->
+          <!-- Displays students with pending document verification -->
+          {% if students %}
+          {% for student in students %}
+          <form method="POST" action="{{ url_for('approve_documents') }}">
+            <div
+              class="student-row d-flex justify-content-between align-items-center"
+            >
+              <!-- Clickable student name to view uploaded document -->
+              <div
+                class="fw-semibold text-primary student-name"
+                onclick="openAadhaar({{ student.student_id }})"
+              >
+                {{ student.student_name }}
+              </div>
+
+              <!-- Hidden field to identify student application -->
+              <input
+                type="hidden"
+                name="student_id"
+                value="{{ student.student_id }}"
+              />
+
+              <!-- Approval and rejection actions -->
+              <div class="d-flex gap-2">
+                <button
+                  type="submit"
+                  name="status"
+                  value="Approved"
+                  class="btn btn-success action-btn"
+                >
+                  Approve
+                </button>
+
+                <button
+                  type="submit"
+                  name="status"
+                  value="Rejected"
+                  class="btn btn-danger action-btn"
+                >
+                  Reject
+                </button>
+              </div>
+            </div>
+          </form>
+          {% endfor %}
+          {% else %}
+          <!-- Empty state when no pending applications exist -->
+          <p class="text-muted text-center mt-4">
+            No applications available.
+          </p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= DOCUMENT VIEWER MODAL ================= -->
+    <!-- Displays uploaded PDF documents for verification -->
+    <div class="modal fade" id="aadhaarModal" tabindex="-1">
+      <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content" style="border-radius: 16px">
+          <div class="modal-header">
+            <h5 class="modal-title">Aadhaar Document</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body p-0" style="height: 80vh">
+            <iframe
+              id="aadhaarFrame"
+              src=""
+              style="width: 100%; height: 100%; border: none"
+            ></iframe>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= SCRIPTS ================= -->
+    <!-- Opens document viewer modal for selected student -->
+    <script>
+      function openAadhaar(studentId) {
+        document.getElementById("aadhaarFrame").src =
+          "/view-aadhaar/" + studentId;
+        new bootstrap.Modal(
+          document.getElementById("aadhaarModal")
+        ).show();
+      }
+    </script>
+
+    <!-- Bootstrap JavaScript bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

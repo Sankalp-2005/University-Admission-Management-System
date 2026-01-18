@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Character encoding for correct text rendering -->
+    <meta charset="UTF-8" />
+
+    <!-- Page title displayed in browser tab -->
+    <title>Application Form</title>
+
+    <!-- Responsive viewport configuration -->
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- Bootstrap CSS for layout and UI components -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+
+    <!-- Bootstrap Icons for navigation icons -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+      rel="stylesheet"
+    />
+
+    <style>
+      /* Global background and base typography */
+      body {
+        background: linear-gradient(180deg, #f1f5f9 0%, #ffffff 100%);
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+          sans-serif;
+      }
+
+      /* Main form card styling */
+      .form-card {
+        border-radius: 26px;
+        background: #ffffff;
+      }
+
+      /* Header section styling */
+      .form-header {
+        border-bottom: 1px solid #e5e7eb;
+        padding-bottom: 1rem;
+        margin-bottom: 2rem;
+      }
+
+      /* Input and select field styling */
+      .form-control,
+      .form-select {
+        border-radius: 12px;
+        padding: 12px;
+      }
+
+      /* Submit button styling */
+      .btn-submit {
+        border-radius: 12px;
+        padding: 10px 32px;
+        font-weight: 600;
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- ================= MAIN CONTAINER ================= -->
+    <!-- Centers the application form vertically and horizontally -->
+    <div
+      class="container min-vh-100 d-flex align-items-center justify-content-center"
+    >
+      <div
+        class="card shadow-lg border-0 form-card w-100"
+        style="max-width: 950px"
+      >
+        <div class="card-body p-4 p-md-5">
+          <!-- ================= HEADER ================= -->
+          <div
+            class="d-flex justify-content-between align-items-center form-header"
+          >
+            <!-- Page heading -->
+            <div>
+              <h4 class="mb-0 fw-bold">Application Form</h4>
+              <small class="text-muted">Fill in your academic details</small>
+            </div>
+
+            <!-- Back navigation to student dashboard -->
+            <a href="{{ url_for('student_dashboard') }}" class="btn btn-sm">
+              <i class="bi bi-arrow-left"></i> Back
+            </a>
+          </div>
+
+          <!-- ================= APPLICATION FORM ================= -->
+          <!-- Submits student application details to backend -->
+          <form
+            action="/application-form"
+            method="POST"
+            enctype="multipart/form-data"
+          >
+            <div class="row g-4">
+              <!-- Student full name -->
+              <div class="col-md-4 fw-semibold d-flex align-items-center">
+                Name
+              </div>
+              <div class="col-md-8">
+                <input
+                  type="text"
+                  name="name"
+                  class="form-control"
+                  placeholder="Enter your full name"
+                  required
+                />
+              </div>
+
+              <!-- Student age -->
+              <div class="col-md-4 fw-semibold d-flex align-items-center">
+                Age
+              </div>
+              <div class="col-md-8">
+                <input
+                  type="number"
+                  min="18"
+                  name="age"
+                  class="form-control"
+                  placeholder="Enter your age"
+                  required
+                />
+              </div>
+
+              <!-- Student gender -->
+              <div class="col-md-4 fw-semibold d-flex align-items-center">
+                Gender
+              </div>
+              <div class="col-md-8">
+                <select name="gender" class="form-select" required>
+                  <option value="" selected disabled>Select gender</option>
+                  <option>Male</option>
+                  <option>Female</option>
+                  <option>Other</option>
+                </select>
+              </div>
+
+              <!-- Student email address -->
+              <div class="col-md-4 fw-semibold d-flex align-items-center">
+                Email address
+              </div>
+              <div class="col-md-8">
+                <input
+                  type="email"
+                  name="email"
+                  class="form-control"
+                  placeholder="Enter email"
+                  required
+                />
+              </div>
+
+              <!-- Preferred department selection -->
+              <div class="col-md-4 fw-semibold d-flex align-items-center">
+                Department
+              </div>
+              <div class="col-md-8">
+                <select name="department" class="form-select" required>
+                  <option value="" selected disabled>Select Department</option>
+                  <option value="CS">Computer Science</option>
+                  <option value="Mechanical">Mechanical</option>
+                  <option value="Civil">Civil</option>
+                </select>
+              </div>
+
+              <!-- Entrance examination score -->
+              <div class="col-md-4 fw-semibold d-flex align-items-center">
+                Entrance Score
+              </div>
+              <div class="col-md-8">
+                <input
+                  type="number"
+                  name="entrance_score"
+                  class="form-control"
+                  placeholder="Enter your entrance exam score"
+                  required
+                />
+              </div>
+
+              <!-- 10th grade percentage -->
+              <div class="col-md-4 fw-semibold d-flex align-items-center">
+                10th Percentage
+              </div>
+              <div class="col-md-8">
+                <input
+                  type="number"
+                  name="percentage_10"
+                  class="form-control"
+                  placeholder="Enter your 10th percentage"
+                  required
+                />
+              </div>
+
+              <!-- 12th grade percentage -->
+              <div class="col-md-4 fw-semibold d-flex align-items-center">
+                12th Percentage
+              </div>
+              <div class="col-md-8">
+                <input
+                  type="number"
+                  name="percentage_12"
+                  class="form-control"
+                  placeholder="Enter your 12th percentage"
+                  required
+                />
+              </div>
+
+              <!-- Document upload (PDF only) -->
+              <div class="col-md-4 fw-semibold d-flex align-items-center">
+                Upload Documents (Aadhar or PAN)
+              </div>
+              <div class="col-md-8">
+                <input
+                  class="form-control"
+                  name="documents"
+                  type="file"
+                  accept=".pdf"
+                  required
+                />
+              </div>
+            </div>
+
+            <!-- ================= FORM SUBMISSION ================= -->
+            <div class="text-end mt-5">
+              <button type="submit" class="btn btn-dark btn-submit">
+                Submit Application
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bootstrap JavaScript bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

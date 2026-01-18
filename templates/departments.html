@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Character encoding for correct text rendering -->
+  <meta charset="UTF-8" />
+
+  <!-- Page title displayed in browser tab -->
+  <title>Departments</title>
+
+  <!-- Responsive viewport configuration -->
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- Bootstrap CSS for layout and UI components -->
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+  />
+
+  <!-- Bootstrap Icons for navigation icons -->
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+    rel="stylesheet"
+  />
+
+  <style>
+    /* Global background and base typography */
+    body {
+      background: linear-gradient(180deg, #f1f5f9 0%, #ffffff 100%);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    /* Main container card styling */
+    .card-box {
+      border-radius: 26px;
+      background: #ffffff;
+    }
+
+    /* Header divider and spacing */
+    .header {
+      border-bottom: 1px solid #e5e7eb;
+      padding-bottom: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    /* Department selection button styling */
+    .dept-btn {
+      border: 2px solid #6c757d;
+      border-radius: 16px;
+      padding: 14px;
+      margin-bottom: 16px;
+      font-weight: 600;
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- ================= MAIN CONTAINER ================= -->
+  <!-- Centers the department selection interface -->
+  <div class="container min-vh-100 d-flex align-items-center justify-content-center">
+    <div class="card shadow-lg border-0 card-box w-100" style="max-width: 900px">
+      <div class="card-body p-4 p-md-5">
+
+        <!-- ================= HEADER ================= -->
+        <div class="d-flex justify-content-between align-items-center header">
+          <!-- Page heading -->
+          <h4 class="fw-bold mb-0">Merit List</h4>
+
+          <!-- Back navigation to admin dashboard -->
+          <a href="{{ url_for('admin_dashboard') }}" class="btn btn-sm">
+            <i class="bi bi-arrow-left"></i> Back
+          </a>
+        </div>
+
+        <!-- ================= DEPARTMENT LINKS ================= -->
+        <!-- Navigates to department-specific merit lists -->
+        <a
+          href="{{ url_for('department_merit', dept='CS') }}"
+          class="btn dept-btn w-100"
+        >
+          CS
+        </a>
+
+        <a
+          href="{{ url_for('department_merit', dept='Mechanical') }}"
+          class="btn dept-btn w-100"
+        >
+          Mechanical
+        </a>
+
+        <a
+          href="{{ url_for('department_merit', dept='Civil') }}"
+          class="btn dept-btn w-100"
+        >
+          Civil
+        </a>
+
+      </div>
+    </div>
+  </div>
+</body>
+</html>
