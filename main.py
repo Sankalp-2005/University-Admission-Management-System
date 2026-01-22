@@ -139,7 +139,8 @@ class Department(db.Model):
     total_seats = db.Column(db.Integer)
     filled_seats = db.Column(db.Integer)
 
-
+with app.app_context():
+    db.create_all()
 # ===============================
 # Authentication Decorators
 # ===============================
@@ -585,7 +586,4 @@ def logout():
 # ===============================
 
 if __name__ == "__main__":
-    with app.app_context():
-        db.create_all()
-
     app.run(debug=True)
