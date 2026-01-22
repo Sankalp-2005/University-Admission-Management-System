@@ -438,51 +438,51 @@ def view_aadhaar(student_id):
     )
 
 
-@app.route("/application-status")
-@student_signin_required
-def application_status():
+@app.route("/approve-documents", methods=["GET", "POST"])
+@admin_signin_required
+def approve_documents():
 
-    application = Application.query.filter_by(
-        student_id=session["student_id"]
-    ).first()
+    if request.method == "POST":
+        student_id = request.form["student_id"]
+        status = request.form["status"]
 
-    if not application:
-        flash("Please fill the application form first.", "danger")
-        return redirect(url_for("student_dashboard"))
-
-    allocation_status = "Document verification is pending"
-
-    if application.document_status == "Rejected":
-        allocation_status = "Documents not verified"
-        try:
-            msg = Message(
-                subject="Documents Rejected",
-                recipients=[application.student_email]
-            )
-            msg.body = "We regret to inform you that your documents are not approved by the admin"
-            mail.send(msg)
-        except:
-            pass
-
-    elif application.document_status == "Documents Approved":
-        try:
-            msg = Message(
-                subject="Application Update",
-                recipients=[application.student_email]
-            )
-            msg.body = "We are glad to inform you that your documents are approved by the admin"
-            mail.send(msg)
-        except:
-            pass
-
-        allocation = Allocation.query.filter_by(
-            application_id=application.application_id
+        application = Application.query.filter_by(student_id=student_id).first()
+        department = Department.query.filter_by(
+            department_name=application.department
         ).first()
 
-        if allocation:
-            allocation_status = allocation.allocation_status
+        application.document_status = status
 
-            if allocation.allocation_status == "Allocated":
+        if status == "Rejected":
+            try:
+                msg = Message(
+                    subject="Documents Rejected",
+                    recipients=[application.student_email]
+                )
+                msg.body = "Your submitted documents have been rejected by the admissions office."
+                mail.send(msg)
+            except:
+                pass
+
+        elif status == "Approved":
+            try:
+                msg = Message(
+                    subject="Documents Approved",
+                    recipients=[application.student_email]
+                )
+                msg.body = "Your documents have been verified successfully."
+                mail.send(msg)
+            except:
+                pass
+
+            if department.filled_seats < department.total_seats:
+                allocation = Allocation(
+                    application_id=application.application_id,
+                    department_id=department.department_id,
+                    allocation_status="Allocated"
+                )
+                department.filled_seats += 1
+
                 try:
                     msg = Message(
                         subject="Admission Offer",
@@ -493,12 +493,33 @@ def application_status():
                 except:
                     pass
 
+            else:
+                allocation = Allocation(
+                    application_id=application.application_id,
+                    department_id=department.department_id,
+                    allocation_status="Not Allocated"
+                )
+
+            db.session.add(allocation)
+
+        db.session.commit()
+        return redirect(url_for("approve_documents"))
+
+    students = Application.query.filter_by(
+        document_status="Pending"
+    ).order_by(
+        Application.entrance_marks.desc(),
+        Application.percentage_12th.desc(),
+        Application.percentage_10th.desc(),
+        Application.student_age.desc()
+    ).all()
+
     return render_template(
-        "application_status.html",
-        student_name=application.student_name,
-        document_status=application.document_status,
-        allocation_status=allocation_status
+        "approve_documents.html",
+        admin_name=session["admin_username"],
+        students=students
     )
+
 
 # ===============================
 # Merit List
